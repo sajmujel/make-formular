@@ -2,126 +2,69 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Home</title>
-  <style>
-  * {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-  }
+<title>Form</title>
 
+<style>
   body {
     margin: 0;
-    background: linear-gradient(135deg, #f0f2f5, #e6e9f0);
+    font-family: Arial;
+    background: #f2f2f2;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
   }
 
-  .card {
+  .box {
     background: white;
-    padding: 30px;
-    border-radius: 18px;
-    width: 380px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-    animation: fadeIn 0.3s ease-in-out;
-  }
-
-  h2, h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #222;
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px;
   }
 
   input, textarea {
     width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    outline: none;
-    transition: 0.2s;
-  }
-
-  input:focus, textarea:focus {
-    border-color: #6c63ff;
-    box-shadow: 0 0 0 3px rgba(108,99,255,0.1);
-  }
-
-  textarea {
-    height: 90px;
-    resize: none;
+    margin: 5px 0;
+    padding: 10px;
   }
 
   button {
     width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-  }
-
-  .btn-primary {
-    background: #6c63ff;
+    padding: 10px;
+    background: black;
     color: white;
-  }
-
-  .btn-primary:hover {
-    background: #574fd6;
-  }
-
-  .btn-secondary {
-    background: #eee;
-  }
-
-  .btn-secondary:hover {
-    background: #ddd;
-  }
-
-  a {
-    display: block;
-    text-align: center;
-    margin-top: 12px;
-    color: #6c63ff;
-    text-decoration: none;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    border: none;
   }
 </style>
 </head>
 
 <body>
 
-<div class="card">
-  <h2>Main Form</h2>
+<div class="box">
+  <h3>Contact form</h3>
 
-  <input id="name" placeholder="Name">
-  <input id="email" placeholder="Email">
-  <textarea id="message" placeholder="Message"></textarea>
+  <input id="name" placeholder="name">
+  <input id="email" placeholder="email">
+  <textarea id="message" placeholder="message"></textarea>
 
-  <button class="btn-primary" onclick="send()">Send</button>
-  <button class="btn-secondary" onclick="goLogin()">Login</button>
+  <button onclick="send()">Send</button>
 </div>
+
 <script>
 const WEBHOOK_URL = "https://hook.eu1.make.com/https://hook.eu1.make.com/h45wtcfbvo7i1l9xpxsknhhuuh5op79x";
 
 function send() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
+  fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      message: document.getElementById("message").value
+    })
+  });
 
-  fetch(WEBHOOK_URL + `?name=${name}&email=${email}&message=${message}`);
-  alert("Sent!");
-}
-
-function goLogin() {
-  window.location.href = "login.html";
+  alert("sent");
 }
 </script>
 
