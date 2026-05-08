@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Message System</title>
 <title>System</title>
 
 <style>
   * { box-sizing: border-box; }
 
   body {
+    font-family: Arial;
+    background: #f4f6f8;
     font-family: 'Segoe UI', sans-serif;
     background: #f0f2f5;
     display: flex;
@@ -17,8 +20,13 @@
     height: 100vh;
   }
 
+  .box {
   .card {
     background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     padding: 30px;
     border-radius: 16px;
     width: 380px;
@@ -30,8 +38,10 @@
   }
 
   button {
+    margin: 5px 0;
     width: 48%;
     padding: 10px;
+    width: 100%;
     margin-bottom: 10px;
     border: none;
     border-radius: 8px;
@@ -47,6 +57,8 @@
 
   input, textarea {
     width: 100%;
+    margin: 5px 0;
+    padding: 8px;
     margin: 8px 0;
     padding: 10px;
     border-radius: 8px;
@@ -54,6 +66,7 @@
   }
 
   textarea {
+    height: 80px;
     height: 90px;
     resize: none;
   }
@@ -64,19 +77,17 @@
     margin-top: 10px;
   }
 </style>
-<title>Home</title>
 </head>
 
 <body>
 
+<div class="box">
 <div class="card">
-<h2>Main Form</h2>
 
   <h2>System Access</h2>
-<input id="name" placeholder="Name"><br><br>
-<input id="email" placeholder="Email"><br><br>
-<textarea id="message" placeholder="Message"></textarea><br><br>
 
+  <button onclick="setMode('login')">🔐 Login</button>
+  <button onclick="setMode('message')">💬 Message</button>
   <div class="row">
     <button onclick="setMode('login')">Login</button>
     <button onclick="setMode('message')">Message</button>
@@ -84,28 +95,21 @@
 
   <input type="text" id="login" placeholder="Login">
   <input type="password" id="password" placeholder="Password">
+
   <textarea id="message" placeholder="Message"></textarea>
 
+  <button onclick="odoslat()" id="btn">Submit</button>
   <button class="submit" onclick="odoslat()">Submit</button>
 
 </div>
-<button onclick="send()">Send</button>
-<button onclick="goLogin()">Login</button>
 
 <script>
 const WEBHOOK_URL = "https://hook.eu1.make.com/xxxxx";
-const WEBHOOK_URL = "https://hook.eu1.make.com/https://hook.eu1.make.com/h45wtcfbvo7i1l9xpxsknhhuuh5op79x";
 
 let mode = "login";
-function send() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
 
 function setMode(m) {
   mode = m;
-  fetch(WEBHOOK_URL + `?name=${name}&email=${email}&message=${message}`);
-  alert("Sent!");
 }
 
 async function odoslat() {
@@ -125,8 +129,6 @@ async function odoslat() {
   await fetch(url, { method: "GET", mode: "no-cors" });
 
   window.location.href = "success.html";
-function goLogin() {
-  window.location.href = "login.html";
 }
 </script>
 
