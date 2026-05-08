@@ -3,58 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login / Message System</title>
+<title>System</title>
 
 <style>
+  * { box-sizing: border-box; }
+
   body {
-    font-family: Arial;
-    background: #f4f6f8;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
   }
 
-  .box {
+  .card {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: 16px;
+    width: 380px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    margin-bottom: 15px;
   }
 
   button {
-    margin: 5px 0;
+    width: 48%;
     padding: 10px;
-    width: 100%;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    background: #6c63ff;
+    color: white;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
   }
 
   input, textarea {
     width: 100%;
-    margin: 5px 0;
-    padding: 8px;
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
   }
 
   textarea {
-    height: 80px;
+    height: 90px;
+    resize: none;
+  }
+
+  .submit {
+    width: 100%;
+    background: #574fd6;
+    margin-top: 10px;
   }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="card">
 
-  <button onclick="setMode('login')">🔐 Login</button>
-  <button onclick="setMode('message')">💬 Message</button>
+  <h2>System Access</h2>
+
+  <div class="row">
+    <button onclick="setMode('login')">Login</button>
+    <button onclick="setMode('message')">Message</button>
+  </div>
 
   <input type="text" id="login" placeholder="Login">
   <input type="password" id="password" placeholder="Password">
-
   <textarea id="message" placeholder="Message"></textarea>
 
-  <button onclick="odoslat()" id="btn">Submit</button>
+  <button class="submit" onclick="odoslat()">Submit</button>
 
 </div>
 
