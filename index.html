@@ -1,137 +1,213 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kontaktný formulár</title>
+<title>Automation Contact Form</title>
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f0f2f5;
+    background: #f3f4f6;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
   }
+
   .card {
     background: white;
-    border-radius: 16px;
+    border-radius: 18px;
     padding: 40px;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   }
-  h1 { font-size: 24px; margin-bottom: 8px; color: #1a1a2e; }
-  p { color: #666; margin-bottom: 28px; font-size: 14px; }
-  label { display: block; font-size: 13px; font-weight: 600; color: #444; margin-bottom: 6px; }
-  input, textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 10px;
+
+  h1 {
+    font-size: 28px;
+    color: #111827;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #6b7280;
+    margin-bottom: 30px;
     font-size: 15px;
-    margin-bottom: 18px;
-    transition: border 0.2s;
+    line-height: 1.5;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 15px;
+    margin-bottom: 20px;
     outline: none;
+    transition: 0.2s;
     font-family: inherit;
   }
-  input:focus, textarea:focus { border-color: #6c63ff; }
-  textarea { height: 120px; resize: vertical; }
+
+  input:focus,
+  textarea:focus {
+    border-color: #6366f1;
+  }
+
+  textarea {
+    height: 120px;
+    resize: vertical;
+  }
+
   button {
     width: 100%;
-    padding: 14px;
-    background: #6c63ff;
+    padding: 15px;
+    background: #6366f1;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: 0.2s;
   }
-  button:hover { background: #574fd6; }
-  button:disabled { background: #aaa; cursor: not-allowed; }
+
+  button:hover {
+    background: #4f46e5;
+  }
+
+  button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+
   .success {
     display: none;
-    background: #e8f5e9;
-    color: #2e7d32;
-    border-radius: 10px;
+    background: #ecfdf5;
+    color: #065f46;
     padding: 16px;
+    border-radius: 12px;
+    margin-top: 18px;
     text-align: center;
-    margin-top: 16px;
     font-weight: 600;
   }
+
   .error {
     display: none;
-    background: #fdecea;
-    color: #c62828;
-    border-radius: 10px;
+    background: #fef2f2;
+    color: #991b1b;
     padding: 16px;
+    border-radius: 12px;
+    margin-top: 18px;
     text-align: center;
-    margin-top: 16px;
-    font-size: 13px;
+    font-size: 14px;
   }
 </style>
 </head>
+
 <body>
+
 <div class="card">
-  <h1>Kontaktný formulár</h1>
-  <p>Vyplňte formulár a správa sa automaticky uloží do Google Sheets.</p>
 
-  <label>Meno</label>
-  <input type="text" id="meno" placeholder="Samo Bachraty">
+  <h1>Automation Workflow Demo</h1>
 
-  <label>Email</label>
-  <input type="email" id="email" placeholder="samo@gmail.com">
+  <p>
+    This form is connected to a Make.com automation workflow using webhooks,
+    Google Sheets integration and email notifications.
+  </p>
 
-  <label>Správa</label>
-  <textarea id="sprava" placeholder="Vaša správa..."></textarea>
+  <label>Full Name</label>
+  <input type="text" id="name" placeholder="John Doe">
 
-  <button onclick="odoslat()" id="btn">Odoslať</button>
-  <div class="success" id="success">✅ Správa odoslaná! Zapísané do Google Sheets.</div>
-  <div class="error" id="error">❌ Chyba pri odoslaní. Skontroluj webhook URL v kóde.</div>
+  <label>Email Address</label>
+  <input type="email" id="email" placeholder="john@example.com">
+
+  <label>Message</label>
+  <textarea id="message" placeholder="Type your message here..."></textarea>
+
+  <button onclick="submitForm()" id="btn">
+    Submit Form
+  </button>
+
+  <div class="success" id="success">
+    ✅ Message successfully submitted and stored.
+  </div>
+
+  <div class="error" id="error">
+    ❌ Failed to submit the form.
+  </div>
+
 </div>
 
 <script>
-  // ZAMEN TUTO URL ZA SVOJU WEBHOOK URL
-  const WEBHOOK_URL = "https://hook.eu1.make.com/bekljckyqsi3mukohdx91gy6dhykyqd0";
 
-  async function odoslat() {
-    const meno = document.getElementById('meno').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const sprava = document.getElementById('sprava').value.trim();
-    const btn = document.getElementById('btn');
-    const success = document.getElementById('success');
-    const error = document.getElementById('error');
+const WEBHOOK_URL = "https://hook.eu1.make.com/bekljckyqsi3mukohdx91gy6dhykyqd0";
 
-    if (!meno || !email || !sprava) {
-      alert('Prosím vyplň všetky polia!');
-      return;
-    }
+async function submitForm() {
 
-    btn.disabled = true;
-    btn.textContent = 'Odosielam...';
-    success.style.display = 'none';
-    error.style.display = 'none';
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
 
-    try {
-      await fetch(WEBHOOK_URL + `?meno=${encodeURIComponent(meno)}&email=${encodeURIComponent(email)}&sprava=${encodeURIComponent(sprava)}`, {
+  const btn = document.getElementById('btn');
+  const success = document.getElementById('success');
+  const error = document.getElementById('error');
+
+  if (!name || !email || !message) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  success.style.display = 'none';
+  error.style.display = 'none';
+
+  try {
+
+    await fetch(
+      WEBHOOK_URL +
+      `?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`,
+      {
         method: 'GET',
         mode: 'no-cors'
-      });
-      success.style.display = 'block';
-      document.getElementById('meno').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('sprava').value = '';
-    } catch(e) {
-      error.style.display = 'block';
-    }
+      }
+    );
 
-    btn.disabled = false;
-    btn.textContent = 'Odoslať';
+    success.style.display = 'block';
+
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
+
+  } catch(e) {
+
+    error.style.display = 'block';
+
   }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Form';
+}
+
 </script>
+
 </body>
 </html>
