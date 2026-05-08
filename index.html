@@ -62,7 +62,6 @@
     margin-bottom: 20px;
     outline: none;
     transition: 0.2s;
-    font-family: inherit;
   }
 
   input:focus,
@@ -128,8 +127,8 @@
   <h1>Automation Workflow Demo</h1>
 
   <p>
-    This form is connected to a Make.com automation workflow using webhooks,
-    Google Sheets integration and email notifications.
+    This form is connected to Make.com automation using webhooks,
+    Google Sheets and email notifications.
   </p>
 
   <label>Full Name</label>
@@ -146,18 +145,17 @@
   </button>
 
   <div class="success" id="success">
-    ✅ Message successfully submitted and stored.
+    ✅ Message successfully submitted.
   </div>
 
   <div class="error" id="error">
-    ❌ Failed to submit the form.
+    ❌ Failed to submit form.
   </div>
 
 </div>
 
 <script>
 
-const WEBHOOK_URL = "https://hook.eu1.make.com/bekljckyqsi3mukohdx91gy6dhykyqd0";
 const WEBHOOK_URL = "https://hook.eu1.make.com/h45wtcfbvo7i1l9xpxsknhhuuh5op79x";
 
 async function submitForm() {
@@ -183,14 +181,9 @@ async function submitForm() {
 
   try {
 
-    await fetch(
-      WEBHOOK_URL +
-      `?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`,
-      {
-        method: 'GET',
-        mode: 'no-cors'
-      }
-    );
+    const url = `${WEBHOOK_URL}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`;
+
+    await fetch(url);
 
     success.style.display = 'block';
 
@@ -198,10 +191,8 @@ async function submitForm() {
     document.getElementById('email').value = '';
     document.getElementById('message').value = '';
 
-  } catch(e) {
-
+  } catch (e) {
     error.style.display = 'block';
-
   }
 
   btn.disabled = false;
