@@ -3,133 +3,211 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login / Message System</title>
-<title>System</title>
+<title>Automation Contact Form</title>
 
 <style>
-  * { box-sizing: border-box; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
   body {
-    font-family: Arial;
-    background: #f4f6f8;
     font-family: 'Segoe UI', sans-serif;
-    background: #f0f2f5;
+    background: #f3f4f6;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
   }
 
-  .box {
   .card {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 30px;
-    border-radius: 16px;
-    width: 380px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-  }
-
-  h2 {
-    margin-bottom: 15px;
-  }
-
-  button {
-    margin: 5px 0;
-    width: 48%;
-    padding: 10px;
+    border-radius: 18px;
+    padding: 40px;
     width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  h1 {
+    font-size: 28px;
+    color: #111827;
     margin-bottom: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background: #6c63ff;
-    color: white;
   }
 
-  .row {
-    display: flex;
-    justify-content: space-between;
+  p {
+    color: #6b7280;
+    margin-bottom: 30px;
+    font-size: 15px;
+    line-height: 1.5;
   }
 
-  input, textarea {
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input,
+  textarea {
     width: 100%;
-    margin: 5px 0;
-    padding: 8px;
-    margin: 8px 0;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    padding: 14px 16px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    outline: none;
+    transition: 0.2s;
+    font-family: inherit;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #6366f1;
   }
 
   textarea {
-    height: 80px;
-    height: 90px;
-    resize: none;
+    height: 120px;
+    resize: vertical;
   }
 
-  .submit {
+  button {
     width: 100%;
-    background: #574fd6;
-    margin-top: 10px;
+    padding: 15px;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #4f46e5;
+  }
+
+  button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  .success {
+    display: none;
+    background: #ecfdf5;
+    color: #065f46;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 18px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .error {
+    display: none;
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
   }
 </style>
 </head>
 
 <body>
 
-<div class="box">
 <div class="card">
 
-  <h2>System Access</h2>
+  <h1>Automation Workflow Demo</h1>
 
-  <button onclick="setMode('login')">🔐 Login</button>
-  <button onclick="setMode('message')">💬 Message</button>
-  <div class="row">
-    <button onclick="setMode('login')">Login</button>
-    <button onclick="setMode('message')">Message</button>
+  <p>
+    This form is connected to a Make.com automation workflow using webhooks,
+    Google Sheets integration and email notifications.
+  </p>
+
+  <label>Full Name</label>
+  <input type="text" id="name">
+
+  <label>Email Address</label>
+  <input type="email" id="email">
+
+  <label>Message</label>
+  <textarea id="message" placeholder="Type your message here..."></textarea>
+
+  <button onclick="submitForm()" id="btn">
+    Submit Form
+  </button>
+
+  <div class="success" id="success">
+    ✅ Message successfully submitted and stored.
   </div>
 
-  <input type="text" id="login" placeholder="Login">
-  <input type="password" id="password" placeholder="Password">
-
-  <textarea id="message" placeholder="Message"></textarea>
-
-  <button onclick="odoslat()" id="btn">Submit</button>
-  <button class="submit" onclick="odoslat()">Submit</button>
+  <div class="error" id="error">
+    ❌ Failed to submit the form.
+  </div>
 
 </div>
 
 <script>
-const WEBHOOK_URL = "https://hook.eu1.make.com/xxxxx";
 
-let mode = "login";
+const WEBHOOK_URL = "https://hook.eu1.make.com/bekljckyqsi3mukohdx91gy6dhykyqd0";
+const WEBHOOK_URL = "https://hook.eu1.make.com/h45wtcfbvo7i1l9xpxsknhhuuh5op79x";
 
-function setMode(m) {
-  mode = m;
-}
+async function submitForm() {
 
-async function odoslat() {
-
-  const login = document.getElementById('login').value.trim();
-  const password = document.getElementById('password').value.trim();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
   const message = document.getElementById('message').value.trim();
 
-  let url = WEBHOOK_URL;
+  const btn = document.getElementById('btn');
+  const success = document.getElementById('success');
+  const error = document.getElementById('error');
 
-  if (mode === "login") {
-    url += `?mode=login&login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`;
-  } else {
-    url += `?mode=message&message=${encodeURIComponent(message)}`;
+  if (!name || !email || !message) {
+    alert('Please fill in all fields.');
+    return;
   }
 
-  await fetch(url, { method: "GET", mode: "no-cors" });
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
 
-  window.location.href = "success.html";
+  success.style.display = 'none';
+  error.style.display = 'none';
+
+  try {
+
+    await fetch(
+      WEBHOOK_URL +
+      `?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&message=${encodeURIComponent(message)}`,
+      {
+        method: 'GET',
+        mode: 'no-cors'
+      }
+    );
+
+    success.style.display = 'block';
+
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
+
+  } catch(e) {
+
+    error.style.display = 'block';
+
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Form';
 }
+
 </script>
 
 </body>
