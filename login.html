@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+</head>
+
+<body>
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Enter email">
+<button onclick="sendCode()">Send code</button>
+
+<script>
+const WEBHOOK_SEND = "https://hook.eu1.make.com/YOUR_SEND_CODE";
+
+function sendCode() {
+  const email = document.getElementById("email").value;
+
+  fetch(WEBHOOK_SEND + `?email=${email}`);
+
+  alert("Code sent!");
+  window.location.href = "verify.html?email=" + email;
+}
+</script>
+
+</body>
+</html>
